@@ -33,21 +33,44 @@ $("#tweets").on('click', function () {
             var tweets = JSON.parse(xhttp.responseText);
             for (tweet in tweets) {
                 var xhttp2 = new XMLHttpRequest();
-                xhttp2.open("GET", "/api/message?message=" + tweets[tweet], true);
-                xhttp2.setRequestHeader("Content-type", "application/json");
-                xhttp2.send();
-                while (true) {
-                    if (xhttp2.readyState == XMLHttpRequest.DONE) {
-                        var score = JSON.parse(xhttp2.responseText);
-                        console.log(score);
-                    }
-                }
-                $("#tweettext").append("<li>" + tweets[tweet] + "</li>");
+                makeRequest('GET', "/api/message?message=" + tweets[tweet])
+                .then(function (datums) {
+                  var data = JSON.parse(datums);
+                  var documents = data.documents;
+                  var close = datums.split("score")[1].split("id")[0];
+                  var score = parseFloat(close.substring(3, close.length - 3));
+                  $("#tweettext").append("<li>" + tweets[tweet] + "</li> <h2> " + score + "</h2>");
+
+                })
             }
         }
     }
     
 });
+
+function makeRequest (method, url) {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open(method, url);
+    xhr.onload = function () {
+      if (this.status >= 200 && this.status < 300) {
+        resolve(xhr.response);
+      } else {
+        reject({
+          status: this.status,
+          statusText: xhr.statusText
+        });
+      }
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText
+      });
+    };
+    xhr.send();
+  });
+}
 
 function processFile(e) {
     console.log(e);
