@@ -39,9 +39,18 @@ def text():
         print(parsed_dict)
 
         cog_results = {}
+        key_phrase_count = {}
         for k, v in parsed_dict.iteritems():
-            cog_results[k] = cog_api_call(v)
-
+            api_call = cog_api_call(v)
+            cog_results[k] = api_call[0]
+            for kp in api_call[1]['documents']:
+                for val in kp['keyPhrases']:
+                    if val not in key_phrase_count:
+                        key_phrase_count[val] = 1
+                    else:
+                        key_phrase_count[val] += 1
+        key_phrase_result = sorted(key_phrase_count.iteritems(), key=lambda (k,v): (v,k), reverse=True)
+        key_phrase_result = key_phrase_result[0:5]
         # change cog_results[k] to a json object to send to front end
         # front end then grabs dict values to display graph. Also, analyze
         # polyfit and include in json
@@ -58,7 +67,7 @@ def text():
                 y.append(v['documents'][0]['score'])
         serializable_cog_results = [{'key':k, 'value': v} for k, v in cog_results.iteritems()]
         best_fit = np.polyfit(x, y, 4).tolist()
-        json_result = {"results": serializable_cog_results, "best_fit": best_fit}
+        json_result = {"results": serializable_cog_results, "best_fit": best_fit, "keyPhrases": key_phrase_result}
         print json_result
         json_return = json.dumps(json_result)
         return render_template('index.html')
@@ -139,9 +148,6 @@ def cog_api_call(text):
         'Ocp-Apim-Subscription-Key': 'dd9c4b679b0446f38042c90953b92c2f',
     }
 
-    params = urllib.urlencode({
-    })
-
     conn = httplib.HTTPSConnection('westus.api.cognitive.microsoft.com')
     body = {
         "documents": [
@@ -152,11 +158,14 @@ def cog_api_call(text):
             }
         ]
     }
-    conn.request("POST", "/text/analytics/v2.0/sentiment?%s" % params, json.dumps(body), headers)
+    conn.request("POST", "/text/analytics/v2.0/sentiment", json.dumps(body), headers)
     response = conn.getresponse()
     data = response.read()
     conn.close()
-    return json.loads(data)
+    conn.request("POST", "/text/analytics/v2.0/keyPhrases", json.dumps(body), headers)
+    response2 = conn.getresponse()
+    data2 = response2.read()
+    return [json.loads(data), json.loads(data2)]
 
 if __name__ == '__main__':
     app.run(debug=True)
