@@ -70,7 +70,7 @@ function updateChart() {
        type: 'scatter',
        data: {
           datasets: [{
-             data: scores
+             data: tweeets
           }]
        },
        options: {
@@ -91,7 +91,7 @@ function updateChart() {
             tooltips: {
                 callbacks: {
                     label: function(tooltipItem, chartData) {
-                        return JSON.stringify(tweeets[tooltipItem['index']]);
+                        return tweeets[tooltipItem['index']]['tweet'];
                     }
                 }
             },
