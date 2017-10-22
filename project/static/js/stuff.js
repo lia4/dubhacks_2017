@@ -23,6 +23,23 @@ $(document).on('change', '#file', function() {
     } 
 });
 
+
+$("#tweets").on('click', function () {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "/api/trump", true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == XMLHttpRequest.DONE) {
+            var tweets = JSON.parse(xhttp.responseText);
+            for (tweet in tweets) {
+                console.log(tweets[tweet]);
+                $("#tweettext").append("<li>" + tweets[tweet] + "</li>");
+            }
+        }
+    }
+    
+});
+
 function processFile(e) {
     console.log(e);
     console.log("Processing file");

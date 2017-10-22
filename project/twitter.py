@@ -7,9 +7,12 @@ def oauth_req(url, http_method="GET", post_body="", http_headers=None):
     resp, content = client.request( url, method=http_method, body=post_body, headers=http_headers )
     return content
 
-home_timeline = oauth_req('https://api.twitter.com/1.1/statuses/home_timeline.json')
-test = json.loads(home_timeline)
-print test
-for x in test:
-	print x
-	print ""
+def getTweets(tweets):
+	url = 'https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=realDonaldTrump&count='
+	url += str(tweets);
+	home_timeline = oauth_req(url)
+	test = json.loads(home_timeline)
+	tweets = [];
+	for x in test:
+		tweets.append(x['text'])
+	return tweets

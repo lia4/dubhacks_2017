@@ -5,9 +5,14 @@ import src.fb_chat as fb_chat
 import os
 import httplib, urllib, base64
 from datetime import datetime as dt
+from twitter import getTweets
 
 app = Flask(__name__);
-
+@app.route('/api/trump', methods=['GET'])
+def tweets():
+    test = json.dumps(getTweets(200));
+    return test;
+    
 @app.route('/')
 def index():
     return render_template('index.html')
