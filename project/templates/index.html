@@ -4,14 +4,26 @@
     <meta charset="UTF-8">
     <title>Flask React</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
     <!-- styles -->
   </head>
   <body>
     <div class="container">
-      <h1>Flask React</h1>
+      <h1>Emotional IQ</h1>
       <br>
-      <div id="content"></div>
+      <div id="content">
+        <form action="/api/message/" method="get">
+            Message: <input type="text" name="message"><br>
+            <input type="submit">
+          </form>
+      </div>
+      <input type="file" id="file">
+      <button id="upload"> Upload </button>
     </div>
     <!-- scripts -->
+      <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="../static/js/stuff.js"> </script>
   </body>
+
 </html>

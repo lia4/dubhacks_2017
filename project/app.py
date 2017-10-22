@@ -1,44 +1,53 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import json
 from bs4 import BeautifulSoup as bs
 import src.fb_chat as fb_chat
+import os
+import httplib, urllib, base64
 from datetime import datetime as dt
-app = Flask(__name__)
 
-@app.route('/api/message')
-def message(text_file, user):
-    import httplib, urllib, base64
+app = Flask(__name__);
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/api/text', methods=['POST'])
+def text():
+    print 'Request to api/text was made!'
+    print request.data['text']
+    return {'text': 'yeeeeeeeee'};
+
+@app.route('/api/message/', methods=['GET'])
+def message():
+    print request.args.get('message')
+    text = request.args.get('message')
 
     headers = {
         # Request headers
         'Content-Type': 'application/json',
-        'Ocp-Apim-Subscription-Key': API_KEY,
+        'Ocp-Apim-Subscription-Key': 'dd9c4b679b0446f38042c90953b92c2f',
     }
 
     params = urllib.urlencode({
     })
 
-    try:
-        conn = httplib.HTTPSConnection('westus.api.cognitive.microsoft.com')
-        body = {
-            "documents": [
-                {
-                    "language": "en",
-                    "id": "string",
-                    "text": text
-                }
-            ]
-        }
-        print body
-        conn.request("POST", "/text/analytics/v2.0/sentiment?%s" % params, json.dumps(body), headers)
-        response = conn.getresponse()
-        data = response.read()
-        print(data)
-        conn.close()
-    except Exception as e:
-        print("[Errno {0}] {1}".format(e.errno, e.strerror))
+    conn = httplib.HTTPSConnection('westus.api.cognitive.microsoft.com')
+    body = {
+        "documents": [
+            {
+                "language": "en",
+                "id": "string",
+                "text": text
+            }
+        ]
+    }
+    conn.request("POST", "/text/analytics/v2.0/sentiment?%s" % params, json.dumps(body), headers)
+    response = conn.getresponse()
+    data = response.read()
+    print(data)
+    conn.close()
     return json.dumps(data)
-
 
 def parse_text(text_file, user):
     from encode import py_to_json
