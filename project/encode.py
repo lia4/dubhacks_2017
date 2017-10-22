@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
 import json
+from datetime import datetime as dt
 import src.fb_chat as fb_chat
+
+dtFormat = '%A, %B %d, %Y at %I:%M%p %Z'
 
 def json_encode(py_obj):
     """This is the method to be passed into the 'default' argument

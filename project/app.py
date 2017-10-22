@@ -2,7 +2,7 @@ from flask import Flask, render_template
 import json
 from bs4 import BeautifulSoup as bs
 import src.fb_chat as fb_chat
-from datetime import datetime
+from datetime import datetime as dt
 app = Flask(__name__)
 
 @app.route('/api/message')
@@ -50,11 +50,11 @@ def parse_text(text_file, user):
             fb_chat.Message(
                     str(msg.find(class_='user').string),
                     dt.strptime(str(msg.find(class_='meta').string), '%A, %B %d, %Y at %I:%M%p %Z'),
-                    str(msg.next_sibling.string.encode('utf-8'))
+                    str(msg.next_sibling.encode('utf-8'))
                 )
             )
     thread = fb_chat.Thread(user, thread_list)
-    return py_to_json(thread)
+    py_to_json(thread)
 
 
 if __name__ == '__main__':
