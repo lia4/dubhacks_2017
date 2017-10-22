@@ -1,5 +1,7 @@
 # dubhacks_2017
-`git clone`
+`git clone this repo`
+
+`cd dubhacks_2017`
 
 `virtualenv eq`
 
@@ -7,4 +9,4 @@
 
 `source bin/activate`
 
-`pip install -r requirements.txt`
+`pip install -r ../requirements.txt`
