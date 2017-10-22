@@ -64,7 +64,6 @@ $("#tweets").on('click', function () {
 
 function updateChart() {
     var chart = angular.element( document.querySelector( '#myChart' ) )[0].getContext('2d');
-    chart.height = 1000;
     var newChart = new Chart(chart, {
        type: 'scatter',
        data: {
@@ -73,8 +72,12 @@ function updateChart() {
           }]
        },
        options: {
-            responsive: true,
-            maintainAspectRatio: false,
+            scales: {
+                   xAxes: [{
+      type: 'linear',
+      position: 'bottom'
+    }]
+                 },
             title: {
                 display: true,
                 text: "Trump Tweets",
