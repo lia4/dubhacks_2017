@@ -100,6 +100,8 @@ function updateChart() {
             }
         }
     });
+    console.log(newChart);
+    console.log(tweeets);
 }
 
 function makeRequest (method, url) {
