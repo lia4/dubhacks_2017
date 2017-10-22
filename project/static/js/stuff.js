@@ -32,7 +32,16 @@ $("#tweets").on('click', function () {
         if (xhttp.readyState == XMLHttpRequest.DONE) {
             var tweets = JSON.parse(xhttp.responseText);
             for (tweet in tweets) {
-                console.log(tweets[tweet]);
+                var xhttp2 = new XMLHttpRequest();
+                xhttp2.open("GET", "/api/message?message=" + tweets[tweet], true);
+                xhttp2.setRequestHeader("Content-type", "application/json");
+                xhttp2.send();
+                while (true) {
+                    if (xhttp2.readyState == XMLHttpRequest.DONE) {
+                        var score = JSON.parse(xhttp2.responseText);
+                        console.log(score);
+                    }
+                }
                 $("#tweettext").append("<li>" + tweets[tweet] + "</li>");
             }
         }
