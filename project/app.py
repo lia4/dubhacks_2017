@@ -46,7 +46,7 @@ def text():
                         key_phrase_count[val] = 1
                     else:
                         key_phrase_count[val] += 1
-        key_phrase_result = sorted(key_phrase_count.iteritems(), key=lambda (k,v): (v,k), reverse=True)
+        key_phrase_result = sorted(key_phrase_count.iteritems(), key=lambda (k,v): (v,k))
         key_phrase_result = key_phrase_result[0:5]
         # change cog_results[k] to a json object to send to front end
         # front end then grabs dict values to display graph. Also, analyze
