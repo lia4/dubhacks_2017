@@ -1,4 +1,7 @@
 # dubhacks_2017
-<h1> EIQ </hi>
+
+EIQ
+
 Text analysis -> Emotion
+
 mwuah
