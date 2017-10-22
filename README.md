@@ -10,3 +10,8 @@
 `source bin/activate`
 
 `pip install -r ../requirements.txt`
+
+# run the program
+
+`cd front-end`
+`npm start`
