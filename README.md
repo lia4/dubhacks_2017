@@ -3,7 +3,7 @@
 
 `cd dubhacks_2017`
 
-`virtualenv eq`
+`virtualenv /path/to/python_version eq`
 
 `cd eq`
 

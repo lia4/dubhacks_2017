@@ -32,16 +32,22 @@ def text():
     global json_return
     if(request.method == 'POST'):
         print("Request to api/text")
-        print(request.args.get('username'))
-        print(request.args.get('recipient'))
         # I'm guessing we want to parse text here
         parsed_dict = parse_text(json.loads(request.data), [request.args.get('username'), request.args.get('recipient')]);
-        print(parsed_dict)
 
         cog_results = {}
+        key_phrase_count = {}
         for k, v in parsed_dict.iteritems():
-            cog_results[k] = cog_api_call(v)
-
+            api_call = cog_api_call(v)
+            cog_results[k] = api_call[0]
+            for kp in api_call[1]['documents']:
+                for val in kp['keyPhrases']:
+                    if val not in key_phrase_count:
+                        key_phrase_count[val] = 1
+                    else:
+                        key_phrase_count[val] += 1
+        key_phrase_result = sorted(key_phrase_count.iteritems(), key=lambda (k,v): (v,k), reverse=True)
+        key_phrase_result = key_phrase_result[0:5]
         # change cog_results[k] to a json object to send to front end
         # front end then grabs dict values to display graph. Also, analyze
         # polyfit and include in json
@@ -58,18 +64,16 @@ def text():
                 y.append(v['documents'][0]['score'])
         serializable_cog_results = [{'key':k, 'value': v} for k, v in cog_results.iteritems()]
         best_fit = np.polyfit(x, y, 4).tolist()
-        json_result = {"results": serializable_cog_results, "best_fit": best_fit}
-        print json_result
+        json_result = {"results": serializable_cog_results, "best_fit": best_fit, "keyPhrases": key_phrase_result}
         json_return = json.dumps(json_result)
+        print "SUCCESS"
         return render_template('index.html')
     else:
         print(json_return)
         return json_return
 
-'''
-@app.route('/api/message/<parsed_dict>', methods=['GET'])
-def message(parsed_dict):
-    logger.info(parsed_dict)
+@app.route('/api/message', methods=['GET'])
+def message():
     print request.args.get('message')
     text = request.args.get('message')
 
@@ -95,10 +99,8 @@ def message(parsed_dict):
     conn.request("POST", "/text/analytics/v2.0/sentiment?%s" % params, json.dumps(body), headers)
     response = conn.getresponse()
     data = response.read()
-    print(data)
     conn.close()
     return json.dumps(data)
-'''
 
 def parse_text(text_file, users):
     from encode import py_to_json
@@ -139,9 +141,6 @@ def cog_api_call(text):
         'Ocp-Apim-Subscription-Key': 'dd9c4b679b0446f38042c90953b92c2f',
     }
 
-    params = urllib.urlencode({
-    })
-
     conn = httplib.HTTPSConnection('westus.api.cognitive.microsoft.com')
     body = {
         "documents": [
@@ -152,11 +151,14 @@ def cog_api_call(text):
             }
         ]
     }
-    conn.request("POST", "/text/analytics/v2.0/sentiment?%s" % params, json.dumps(body), headers)
+    conn.request("POST", "/text/analytics/v2.0/sentiment", json.dumps(body), headers)
     response = conn.getresponse()
     data = response.read()
     conn.close()
-    return json.loads(data)
+    conn.request("POST", "/text/analytics/v2.0/keyPhrases", json.dumps(body), headers)
+    response2 = conn.getresponse()
+    data2 = response2.read()
+    return [json.loads(data), json.loads(data2)]
 
 if __name__ == '__main__':
     app.run(debug=True)
