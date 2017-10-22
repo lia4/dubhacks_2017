@@ -1,4 +1,10 @@
 # dubhacks_2017
-<h1> EIQ </hi>
-Text analysis -> Emotion
-mwuah
+`git clone`
+
+`virtualenv eq`
+
+`cd eq`
+
+`source bin/activate`
+
+`pip install -r requirements.txt`
