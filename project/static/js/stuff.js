@@ -63,6 +63,7 @@ function getData() {
   var data = JSON.parse(xhttp.responseText);
   console.log(data);
   $("#key-phrases").text(JSON.stringify(data.keyPhrases));
+  $("#sentiment-average").text(data.average);
   var plot_data = data.results.map(function(result) {
     var x = result.key[2];
     var y = result.value.documents[0].score;
@@ -81,6 +82,5 @@ function processFile(e) {
     xhttp.open("POST", "/api/text/?username=" + username + "&recipient=" + recipient, true);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send(JSON.stringify(file));
-    console.log("success");
 }
 
