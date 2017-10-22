@@ -32,11 +32,8 @@ def text():
     global json_return
     if(request.method == 'POST'):
         print("Request to api/text")
-        print(request.args.get('username'))
-        print(request.args.get('recipient'))
         # I'm guessing we want to parse text here
         parsed_dict = parse_text(json.loads(request.data), [request.args.get('username'), request.args.get('recipient')]);
-        print(parsed_dict)
 
         cog_results = {}
         key_phrase_count = {}
@@ -68,8 +65,8 @@ def text():
         serializable_cog_results = [{'key':k, 'value': v} for k, v in cog_results.iteritems()]
         best_fit = np.polyfit(x, y, 4).tolist()
         json_result = {"results": serializable_cog_results, "best_fit": best_fit, "keyPhrases": key_phrase_result}
-        print json_result
         json_return = json.dumps(json_result)
+        print "SUCCESS"
         return render_template('index.html')
     else:
         print(json_return)
@@ -102,7 +99,6 @@ def message():
     conn.request("POST", "/text/analytics/v2.0/sentiment?%s" % params, json.dumps(body), headers)
     response = conn.getresponse()
     data = response.read()
-    print(data)
     conn.close()
     return json.dumps(data)
 
