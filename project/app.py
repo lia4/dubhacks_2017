@@ -32,9 +32,9 @@ def text():
     global json_return
     if(request.method == 'POST'):
         print("Request to api/text")
+        analyze_user = request.args.get('username')
         # I'm guessing we want to parse text here
-        parsed_dict = parse_text(json.loads(request.data), [request.args.get('username'), request.args.get('recipient')]);
-
+        parsed_dict = parse_text(json.loads(request.data), [request.args.get('username'), request.args.get('recipient')], analyze_user);
         cog_results = {}
         key_phrase_count = {}
         for k, v in parsed_dict.iteritems():
@@ -56,13 +56,12 @@ def text():
         y = []
 
         # TODO: Fix this so it actually gets a value we want (not hard code)
-        analyze_user = request.args.get('username')
 
         for k, v in cog_results.iteritems() :
             if k[0] is analyze_user :
                 x.append(k[2])
                 y.append(v['documents'][0]['score'])
-        serializable_cog_results = [{'key':k, 'value': v} for k, v in cog_results.iteritems()]
+        serializable_cog_results = [{'key':k, 'value': v} for k, v in sorted(cog_results.iteritems())]
         best_fit = np.polyfit(x, y, 4).tolist()
         json_result = {"results": serializable_cog_results, "best_fit": best_fit, "keyPhrases": key_phrase_result}
         json_return = json.dumps(json_result)
@@ -70,7 +69,7 @@ def text():
         return render_template('index.html')
     else:
         print(json_return)
-        return json_return
+        return json_return 
 
 @app.route('/api/message', methods=['GET'])
 def message():
@@ -102,7 +101,7 @@ def message():
     conn.close()
     return json.dumps(data)
 
-def parse_text(text_file, users):
+def parse_text(text_file, users, analyze_user):
     from encode import py_to_json
     soup = bs(text_file, "html.parser")
     dtFormat = '%A, %B %d, %Y at %I:%M%p %Z'
@@ -123,15 +122,16 @@ def parse_text(text_file, users):
         time_start = base_datetime - timedelta(days=i)
         time_end = base_datetime - timedelta(days=i - 1)
         for user_thread in by_users:
-            list_of_messages = user_thread.sent_between(time_start, time_end)
-            list_of_messages.sort(key=lambda x: x.date_time)
-            concat_messages = ""
-            for m in list_of_messages :
-                remove_p = str(m.text).replace("<p>", "")
-                remove_end_p = remove_p.replace("</p>", "")
-                concat_messages += remove_end_p + " "
-            if len(concat_messages) != 0 :
-                msgs_between[(user_thread.people, str(time_start), 20 - i)] = concat_messages
+            if(user_thread.people.string is analyze_user):
+                list_of_messages = user_thread.sent_between(time_start, time_end)
+                list_of_messages.sort(key=lambda x: x.date_time)
+                concat_messages = ""
+                for m in list_of_messages :
+                    remove_p = str(m.text).replace("<p>", "")
+                    remove_end_p = remove_p.replace("</p>", "")
+                    concat_messages += remove_end_p + " "
+                if len(concat_messages) != 0 :
+                    msgs_between[(user_thread.people, str(time_start), 20 - i)] = concat_messages
     return msgs_between
 
 def cog_api_call(text):
