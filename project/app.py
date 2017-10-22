@@ -122,7 +122,7 @@ def parse_text(text_file, users, analyze_user):
         time_start = base_datetime - timedelta(days=i)
         time_end = base_datetime - timedelta(days=i - 1)
         for user_thread in by_users:
-            if(user_thread.people.string is analyze_user):
+            if(user_thread.people is analyze_user):
                 list_of_messages = user_thread.sent_between(time_start, time_end)
                 list_of_messages.sort(key=lambda x: x.date_time)
                 concat_messages = ""
