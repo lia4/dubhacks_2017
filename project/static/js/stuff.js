@@ -61,6 +61,8 @@ function getData() {
   xhttp.open("GET", "/api/text/?username=" + username + "&recipient=" + recipient, false);
   xhttp.send();
   var data = JSON.parse(xhttp.responseText);
+  console.log(data);
+  $("#key-phrases").text(JSON.stringify(data.keyPhrases));
   var plot_data = data.results.map(function(result) {
     var x = result.key[2];
     var y = result.value.documents[0].score;
