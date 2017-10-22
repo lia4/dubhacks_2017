@@ -62,10 +62,8 @@ $("#tweets").on('click', function () {
     }
 });
 
-
 function updateChart() {
     var chart = angular.element( document.querySelector( '#myChart' ) )[0].getContext('2d');
-    chart.height = 1000;
     var newChart = new Chart(chart, {
        type: 'scatter',
        data: {
@@ -74,8 +72,6 @@ function updateChart() {
           }]
        },
        options: {
-            responsive: true,
-            maintainAspectRatio: false,
             scales: {
                    xAxes: [{
       type: 'linear',
@@ -100,6 +96,8 @@ function updateChart() {
             }
         }
     });
+    console.log(newChart);
+    console.log(tweeets);
 }
 
 function makeRequest (method, url) {
@@ -126,18 +124,29 @@ function makeRequest (method, url) {
   });
 }
 
+
+$("#sub").on('click', getData);
+
+function getData() {
+  var username = $('#username').val();
+  var recipient = $('#recipient').val();
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("GET", "/api/text/?username=" + username + "&recipient=" + recipient, true);
+  xhttp.send();
+  console.log(xhttp.responseType);
+  //JSON.parse(xhttp.responseText);
+}
+
 function processFile(e) {
     var username = $('#username').val();
     var recipient = $('#recipient').val();
-    console.log(e);
     console.log("Processing file");
     var file = e.target.result;
-    console.log(file);
     $("#fileName").text(name);
     var xhttp = new XMLHttpRequest();
     xhttp.open("POST", "/api/text/?username=" + username + "&recipient=" + recipient, true);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send(JSON.stringify(file));
-    // var response = JSON.parse(xhttp.responseText);
-    
+    console.log("success");
 }
+

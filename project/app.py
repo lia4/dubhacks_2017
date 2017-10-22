@@ -75,10 +75,8 @@ def text():
         print(json_return)
         return json_return
 
-'''
-@app.route('/api/message/<parsed_dict>', methods=['GET'])
-def message(parsed_dict):
-    logger.info(parsed_dict)
+@app.route('/api/message', methods=['GET'])
+def message():
     print request.args.get('message')
     text = request.args.get('message')
 
@@ -107,7 +105,6 @@ def message(parsed_dict):
     print(data)
     conn.close()
     return json.dumps(data)
-'''
 
 def parse_text(text_file, users):
     from encode import py_to_json
