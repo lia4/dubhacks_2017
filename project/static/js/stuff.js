@@ -127,13 +127,15 @@ function makeRequest (method, url) {
 }
 
 function processFile(e) {
+    var username = $('#username').val();
+    var recipient = $('#recipient').val();
     console.log(e);
     console.log("Processing file");
     var file = e.target.result;
     console.log(file);
     $("#fileName").text(name);
     var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "/api/text", true);
+    xhttp.open("POST", "/api/text/?username=" + username + "&recipient=" + recipient, true);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send(JSON.stringify(file));
     // var response = JSON.parse(xhttp.responseText);
