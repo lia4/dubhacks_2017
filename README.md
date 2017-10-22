@@ -13,6 +13,10 @@
 
 # run the program
 
-`cd front-end`
+`cd project`
 
-`npm start`
+`python app.py`
+
+`go to http://127.0.0.1:5000/`
+
+`optional: mjork`
