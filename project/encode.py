@@ -16,7 +16,7 @@ def json_encode(py_obj):
         return {'messages': py_obj.messages,
                 'people': py_obj.people}
     elif isinstance(py_obj, fb_chat.Message):
-        return {'text': py_obj.text,
+        return {'text': py_obj.text[3:-4],
                 'date_time': py_obj.date_time,
                 'sender': py_obj.sender}
     elif isinstance(py_obj, dt):

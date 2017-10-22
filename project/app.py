@@ -19,10 +19,9 @@ def dump(obj):
 @app.route('/api/text', methods=['POST'])
 def text():
     print 'Request to api/text was made!'
-    print request.data
     # I'm guessing we want to parse text here
-    parse_text(request.data, "Foris Kuang");
-    return request.data;
+    parse_text(json.loads(request.data), "Foris Kuang");
+    return 'cjuss'
 
 @app.route('/api/message/', methods=['GET'])
 def message():
@@ -56,7 +55,6 @@ def message():
     return json.dumps(data)
 
 def parse_text(text_file, user):
-    print "parse_text"
     from encode import py_to_json
     soup = bs(text_file, "html.parser")
     dtFormat = '%A, %B %d, %Y at %I:%M%p %Z'
@@ -71,7 +69,6 @@ def parse_text(text_file, user):
             )
     thread = fb_chat.Thread(user, thread_list)
     py_to_json(thread)
-    print thread_list
 
 if __name__ == '__main__':
     app.run(debug=True)
