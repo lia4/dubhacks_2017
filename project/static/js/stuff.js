@@ -1,7 +1,6 @@
 var uploadButton = $('#upload');
 
-
-uploadButton.on('click', function() {
+$(document).on('change', '#file', function() {
     if (!window.FileReader) {
         alert('Your browser is not supported');
         return false;
@@ -12,6 +11,8 @@ uploadButton.on('click', function() {
     var reader = new FileReader();
     if (input.files.length) {
         var textFile = input.files[0];
+        console.log(textFile.name);
+        $("#fileName").text(textFile.name);
         // Read the file
         reader.readAsText(textFile);
         // When it's loaded, process it
