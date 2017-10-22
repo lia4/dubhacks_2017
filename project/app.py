@@ -29,6 +29,7 @@ def dump(obj):
 
 @app.route('/api/text/', methods=['POST','GET'])
 def text():
+    import operator
     global json_return
     if(request.method == 'POST'):
         print("Request to api/text")
@@ -40,14 +41,16 @@ def text():
         for k, v in parsed_dict.iteritems():
             api_call = cog_api_call(v)
             cog_results[k] = api_call[0]
+            print(api_call[1]['documents'])
             for kp in api_call[1]['documents']:
                 for val in kp['keyPhrases']:
                     if val not in key_phrase_count:
                         key_phrase_count[val] = 1
                     else:
                         key_phrase_count[val] += 1
-        key_phrase_result = sorted(key_phrase_count.iteritems(), key=lambda (k,v): (v,k))
+        key_phrase_result = sorted(key_phrase_count.iteritems(), key=lambda (k,v): (v,k), reverse=True)
         key_phrase_result = key_phrase_result[0:5]
+        print key_phrase_result
         # change cog_results[k] to a json object to send to front end
         # front end then grabs dict values to display graph. Also, analyze
         # polyfit and include in json
@@ -67,7 +70,7 @@ def text():
         json_result = {"results": serializable_cog_results, "best_fit": best_fit, "keyPhrases": key_phrase_result, "average": average}
         json_return = json.dumps(json_result)
         print "SUCCESS"
-        return render_template('index.html')
+        return render_template('index.html', status=200)
     else:
         print(json_return)
         return json_return 
