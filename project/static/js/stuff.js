@@ -75,12 +75,6 @@ function updateChart() {
        options: {
             responsive: true,
             maintainAspectRatio: false,
-            scales: {
-                   xAxes: [{
-      type: 'linear',
-      position: 'bottom'
-    }]
-                 },
             title: {
                 display: true,
                 text: "Trump Tweets",
