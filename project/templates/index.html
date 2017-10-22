@@ -17,12 +17,11 @@
       <br>
       </div>
       <div id="content">
-        <form action="/api/text" method="get">
+        <form>
             <h3> Your username: </h3>
             <input type="text" name="username" id="username" class="form-control"><br>
             <h3> Your friend's username: </h3>
             <input type="text" name="recipient" id="recipient" class="form-control"><br>
-            <button type="submit" class="btn btn-success" id="sub"> Submit </button>
           </form>
       </div>
       <div id="fileinput">
@@ -33,6 +32,7 @@
         </label>
         <h3 id="fileName"> </h3>
       </div>
+      <button type="submit" class="btn btn-success" id="sub"> Submit </button>
 
       <div id="getMessages">
       <a href="../messages.json" download="messages.json">Download</a>
