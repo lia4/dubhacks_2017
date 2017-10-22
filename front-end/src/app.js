@@ -1,7 +1,10 @@
 import React from "react";
-import Header from "./components/header"
+import Header from "./components/header";
+import Submission from "./containers/submission";
+import Result from "./containers/result";
+import { Grid, Col } from "react-bootstrap";
 
-import "./styles/app.css"
+import "./styles/app.css";
 
 class App extends React.Component {
 
@@ -11,14 +14,14 @@ class App extends React.Component {
                 <header class="App-header">
                     <Header />
                 </header>
-                <div id="style-wrapper">
-                    <div class="style-inner-left">
-                        <Header />
-                    </div>
-                    <div class="style-inner-right">
-                        <Header />
-                    </div>
-                </div>
+                <Grid>
+                    <Col sm={4} smOffset={1}>
+                        <Submission />
+                    </Col>
+                    <Col sm={4} smOffset={2}>
+                        <Result />
+                    </Col>
+                </Grid>
             </div>
         );
     }

@@ -3,27 +3,8 @@
 }
 
 .App-header {
-	background-color: cyan;
+	background-color: #6dd3ed;
 	padding: 20px;
 	height: 100px;
 	color: black;
-}
-
-#style-wrapper {
-	margin: auto;
-	width: 50%;
-}
-
-div.style-inner-left {
-	float: left;
-	width: 200px;
-    border: 3px solid #73AD21;
-    padding: 10px;
-}
-
-div.style-inner-right {
-	float: right;
-	width: 200px;
-    border: 3px solid #73AD21;
-    padding: 10px;
 }
