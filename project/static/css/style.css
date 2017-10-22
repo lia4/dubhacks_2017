@@ -1,5 +1,7 @@
 /* custom styles */
-
+html, h1, h2, h3, h4, div {
+	font-family: 'Indie Flower', cursive;
+}
 .fileinput {
 	padding-top: 50px;
 }
