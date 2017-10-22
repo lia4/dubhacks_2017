@@ -23,106 +23,32 @@ $(document).on('change', '#file', function() {
     } 
 });
 
-tweeets = [];
-scores = [];
-
-$("#updateChart").on('click', updateChart);
-
-$("#tweets").on('click', function () {
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/api/trump", true);
-    xhttp.send();
-    scores = [];
-
-    xhttp.onreadystatechange = function() {
-        if (xhttp.readyState == XMLHttpRequest.DONE) {
-            var tweets = JSON.parse(xhttp.responseText);
-            for (tweet in tweets) {
-                var xhttp2 = new XMLHttpRequest();
-                var twt = tweets[tweet]
-                console.log(twt)
-                var temp_tweet = {
-                    x: tweet,
-                    tweet: twt,
-                };
-                tweeets.push(temp_tweet);
-                $("#tweettext").append("<li>" + twt + "</li>");
-                makeRequest('GET', "/api/message?message=" + twt)
-                .then(function (datums) {
-                  var data = JSON.parse(datums);
-                  var documents = data.documents;
-                  var close = datums.split("score")[1].split("id")[0];
-                  var score = parseFloat(close.substring(3, close.length - 3));
-                  // $("#tweettext").append("<h2> " + score + "</h2>");
-                  scores.push(score);
-                  tweeets[scores.length - 1].y = score;
-                });
-            }
+function updateChart(datas) {
+    var chart = angular.element( document.querySelector( '#myChart' ) )[0].getContext('2d');
+    chart.height = 1000;
+    var scatterChart = new Chart(chart, {
+    type: 'scatter',
+    data: {
+        datasets: [{
+            label: 'Scatter Dataset',
+            data: datas
+        }]
+    },
+    options: {
+        elements: {
+          line: {
+            tension: 0,
+            fill: 'false'
+          }
+        },
+        scales: {
+            xAxes: [{
+                type: 'linear',
+                position: 'bottom'
+            }]
         }
     }
 });
-
-function updateChart() {
-    var chart = angular.element( document.querySelector( '#myChart' ) )[0].getContext('2d');
-    chart.height = 1000;
-    var newChart = new Chart(chart, {
-       type: 'scatter',
-       data: {
-          datasets: [{
-             data: tweeets
-          }]
-       },
-       options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                   xAxes: [{
-      type: 'linear',
-      position: 'bottom'
-    }]
-                 },
-            title: {
-                display: true,
-                text: "Trump Tweets",
-                fontSize: 40,
-                fontFamily: 'Open Sans',
-            },
-            tooltips: {
-                callbacks: {
-                    label: function(tooltipItem, chartData) {
-                        return tweeets[tooltipItem['index']]['tweet'];
-                    }
-                }
-            },
-            legend: {
-                display: false,
-            }
-        }
-    });
-}
-
-function makeRequest (method, url) {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open(method, url);
-    xhr.onload = function () {
-      if (this.status >= 200 && this.status < 300) {
-        resolve(xhr.response);
-      } else {
-        reject({
-          status: this.status,
-          statusText: xhr.statusText
-        });
-      }
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText
-      });
-    };
-    xhr.send();
-  });
 }
 
 
@@ -132,10 +58,15 @@ function getData() {
   var username = $('#username').val();
   var recipient = $('#recipient').val();
   var xhttp = new XMLHttpRequest();
-  xhttp.open("GET", "/api/text/?username=" + username + "&recipient=" + recipient, true);
+  xhttp.open("GET", "/api/text/?username=" + username + "&recipient=" + recipient, false);
   xhttp.send();
-  console.log(xhttp.responseType);
-  //JSON.parse(xhttp.responseText);
+  var data = JSON.parse(xhttp.responseText);
+  var plot_data = data.results.map(function(result) {
+    var x = result.key[2];
+    var y = result.value.documents[0].score;
+    return {"x": x, "y": y};
+  });
+  updateChart(plot_data);
 }
 
 function processFile(e) {
