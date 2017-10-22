@@ -15,10 +15,15 @@
     <div class="container">
       <h1>Emotional IQ</h1>
       <br>
+      </div>
       <div id="content">
         <form action="/api/text" method="get">
-            <h3> Message: <h3/>
-            <input type="text" name="message" class="form-control" ><br>
+            <h3> Your username: </h3>
+            <input type="text" name="username" class="form-control"><br>
+            <h3> Your friend's username: </h3>
+            <input type="text" name="recipient" class="form-control"><br>
+            <h3> Message: </h3>
+            <input type="text" name="message" class="form-control"><br>
             <button type="submit" class="btn btn-success" id="sub"> Submit </button>
           </form>
       </div>
