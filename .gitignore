@@ -1,6 +1,7 @@
 # Virtualenv
 # http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
 .Python
+*.pyc
 [Bb]in
 [Ii]nclude
 [Ll]ib
@@ -12,4 +13,3 @@ pyvenv.cfg
 pip-selfcheck.json
 .DS_Store
 /front-end/node_modules/
-*.pyc

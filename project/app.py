@@ -62,8 +62,9 @@ def text():
                 x.append(k[2])
                 y.append(v['documents'][0]['score'])
         serializable_cog_results = [{'key':k, 'value': v} for k, v in sorted(cog_results.iteritems())]
+        average = reduce(lambda x, l: x + l, y) / len(y)
         best_fit = np.polyfit(x, y, 4).tolist()
-        json_result = {"results": serializable_cog_results, "best_fit": best_fit, "keyPhrases": key_phrase_result}
+        json_result = {"results": serializable_cog_results, "best_fit": best_fit, "keyPhrases": key_phrase_result, "average": average}
         json_return = json.dumps(json_result)
         print "SUCCESS"
         return render_template('index.html')
