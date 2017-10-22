@@ -10,7 +10,7 @@ from twitter import getTweets
 app = Flask(__name__);
 @app.route('/api/trump', methods=['GET'])
 def tweets():
-    test = json.dumps(getTweets(2));
+    test = json.dumps(getTweets(20));
     return test;
     
 @app.route('/')
